@@ -1,0 +1,65 @@
+========== 源代码 ==========
+int main() {
+    int x;
+    float y;
+    x = 5;
+    y = 3.14;
+    if (x < 10) {
+        x = x + 1;
+    }
+    while (y > 0) {
+        y = y - 1.0;
+    }
+    print x;
+    return 0;
+}
+
+
+========== Token 流 ==========
+<INT, int> <ID, main> <LPA, (> <RPA, )> <LBR, {> <INT, int> <ID, x> <SCO, ;> <FLOAT, float> <ID, y> <SCO, ;> <ID, x> <ASG, => <NUM, 5> <SCO, ;> <ID, y> <ASG, => <FLO, 3.14> <SCO, ;> <IF, if> <LPA, (> <ID, x> <LSS, <> <NUM, 10> <RPA, )> <LBR, {> <ID, x> <ASG, => <ID, x> <ADD, +> <NUM, 1> <SCO, ;> <RBR, }> <WHILE, while> <LPA, (> <ID, y> <GTR, >> <NUM, 0> <RPA, )> <LBR, {> <ID, y> <ASG, => <ID, y> <SUB, -> <FLO, 1.0> <SCO, ;> <RBR, }> <PRINT, print> <ID, x> <SCO, ;> <RETURN, return> <NUM, 0> <SCO, ;> <RBR, }> 
+
+========== 抽象语法树 (AST) ==========
+Program
+  FuncDecl(main) :int
+    Params
+    Block
+      VarDecl(x) :int
+      VarDecl(y) :float
+      Assign(x) :int
+        ID(x)
+        IntConst(5) :int
+      Assign(y) :float
+        ID(y)
+        FloatConst(3.14) :float
+      If
+        BinOp(<)
+          ID(x) :int
+          IntConst(10) :int
+        Block
+          Assign(x) :int
+            ID(x)
+            BinOp(+) :int
+              ID(x) :int
+              IntConst(1) :int
+      While
+        BinOp(>)
+          ID(y) :float
+          IntConst(0) :int
+        Block
+          Assign(y) :float
+            ID(y)
+            BinOp(-) :float
+              ID(y) :float
+              FloatConst(1.0) :float
+      Print
+        ID(x) :int
+      Return
+        IntConst(0) :int
+
+========== 符号表 ==========
+  作用域 0:
+    main : int()
+
+========== 语义检查结果 ==========
+未检测到语义错误
+

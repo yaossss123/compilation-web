@@ -1,0 +1,136 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  numbers=left,numberstyle=\tiny\color{gray},
+  frame=single,rulecolor=\color{black!30},
+  breaklines=true,breakatwhitespace=true,
+  language=C++
+}
+
+\title{\textbf{编译器设计专题实验报告}\\[0.5em]实验四：SLR(1)分析表生成}
+\author{张凌曜 \quad 2234214014 \quad 计算机2306}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{实验目的}
+在实验三LR(0)规范族的基础上，算FIRST集和FOLLOW集，生成SLR(1)分析表（ACTION和GOTO），利用FOLLOW集解决LR(0)中移进-归约冲突。
+
+\section{实验原理}
+LR(0)遇到归约项目就无脑归约，SLR(1)改进了一点：只有当前输入符号在$\text{FOLLOW}(A)$里才归约，这样能消掉不少冲突。
+
+FIRST集就是从某个符号串能推导出来的第一个终结符。FOLLOW集是在某些句型中能紧跟在非终结符后面的终结符。FOLLOW集的计算要迭代，直到集合不再变化。
+
+\section{实验过程}
+
+\subsection{FIRST/FOLLOW集计算}
+两个集合都用迭代法，反复扫所有产生式直到不动了为止。FOLLOW集的规则有三条：起始符号的FOLLOW加\$；$A \to \alpha B\beta$时把$\text{FIRST}(\beta)$里非$\epsilon$的元素加到$\text{FOLLOW}(B)$；如果$\beta$能推出$\epsilon$就把$\text{FOLLOW}(A)$也加到$\text{FOLLOW}(B)$。
+
+\subsection{分析表构建}
+对每个状态$I_i$里的每个项目：点后面是终结符$a$就填移进$s_j$；归约项目$A \to \alpha\cdot$就在FOLLOW(A)对应的列填归约$r_k$；$S' \to S\cdot$在\$列填acc。
+
+\section{测试结果}
+
+\subsection{四则运算文法}
+
+FOLLOW集结果：
+
+\begin{center}
+\begin{tabular}{ll}
+$\text{FOLLOW}(E) = \{\$,\ ),\ +\}$ & $\text{FOLLOW}(E') = \{\$\}$ \\
+$\text{FOLLOW}(T) = \{\$,\ ),\ *,\ +\}$ & $\text{FOLLOW}(F) = \{\$,\ ),\ *,\ +\}$
+\end{tabular}
+\end{center}
+
+ACTION表（部分）：
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccccc}
+\toprule
+状态 & ( & ) & * & + & id & \$ \\
+\midrule
+$I_0$ & s1 & & & & s5 & \\
+$I_2$ & & & & s7 & & acc \\
+$I_3$ & & r4 & r4 & r4 & & r4 \\
+$I_4$ & & r2 & s8 & r2 & & r2 \\
+$I_5$ & & r6 & r6 & r6 & & r6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+$I_2$里$E' \to E\cdot$是归约，$E \to E\cdot+T$是移进。LR(0)下这是冲突，但SLR(1)里归约只在$\text{FOLLOW}(E')=\{\$\}$时执行，移进在$+$时执行，两边不重叠，\textbf{冲突解决了}。
+
+\begin{center}
+\includegraphics[height=7cm]{image/1.1.png}
+\vspace{0.3em}
+\includegraphics[height=5cm]{image/1.2.png}
+\end{center}
+
+\subsection{嵌套文法}
+$S \to aSb | aS | c$
+
+$I_4$里有$S \to aS\cdot b$（移进）和$S \to aS\cdot$（归约）。SLR(1)看$\text{FOLLOW}(S) = \{\$, b\}$，$b$在FOLLOW里所以移进和归约对$b$都有定义，冲突没法完全消掉。程序里对$b$优先移进，并输出了冲突提示。
+
+\begin{center}
+\includegraphics[height=7cm]{image/2.png}
+\end{center}
+
+\section{选做：flex/bison自动化工具}
+用flex做词法分析、bison做语法分析，实现了一个四则运算计算器。
+
+\subsection{flex词法定义（calc.l）}
+flex用正则表达式定义Token规则，自动生成了扫描器\texttt{lex.yy.c}：
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language={}]
+[ \t\r\n]+        { /* skip whitespace */ }
+[0-9]+            { yylval = atoi(yytext); return NUM; }
+"+"               { return PLUS; }
+"*"               { return TIMES; }
+"("               { return LPAREN; }
+")"               { return RPAREN; }
+\end{lstlisting}
+
+\subsection{bison语法定义（calc.y）}
+bison用BNF定义文法和语义动作，自动生成了LALR(1)分析器\texttt{calc.tab.c}：
+\begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language={}]
+%left PLUS MINUS
+%left TIMES DIVIDE
+
+expr:
+    NUM                { $$ = $1; }
+  | expr PLUS expr     { $$ = $1 + $3; }
+  | expr TIMES expr    { $$ = $1 * $3; }
+  | LPAREN expr RPAREN { $$ = $2; }
+  ;
+\end{lstlisting}
+
+\texttt{\%left}声明自动解决了运算符优先级和结合性冲突，不需要手动构造分析表。
+
+\subsection{测试结果}
+输入\texttt{3 + 5 * 2}，bison按优先级先归约\texttt{5 * 2 = 10}，再归约\texttt{3 + 10 = 13}：
+
+\begin{center}
+\includegraphics[height=5cm]{image/3.png}
+\end{center}
+
+\textbf{对比手写的SLR(1)程序}：flex/bison把词法分析和语法分析的代码生成全自动化了，只需要写\texttt{.l}和\texttt{.y}两个定义文件，就能得到完整的分析器。这就是工业界用yacc/bison构建编译器的原因。
+
+\section{实验总结}
+SLR(1)本质上就是``归约的时候往前看一眼''，用FOLLOW集判断该不该归约。大部分常见冲突都能解决，但像嵌套文法那种就不行了，得上LALR(1)或者LR(1)。
+
+FOLLOW集的迭代计算要注意收敛条件，必须集合完全不变才停，不然会死循环。
+
+选做部分用flex/bison体验了一下自动化工具，发现它们和手写SLR(1)的核心思路是一样的——都是基于LALR(1)分析，只不过flex/bison自动帮你做了FIRST/FOLLOW集计算和冲突解决。这让人更能体会到理论到工程的桥梁作用。
+
+\end{document}

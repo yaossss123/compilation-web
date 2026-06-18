@@ -1,0 +1,2 @@
+2
+while(true) {int a=0;}

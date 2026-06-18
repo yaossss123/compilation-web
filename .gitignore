@@ -1,0 +1,29 @@
+# Compiled binaries
+*.exe
+*.o
+*.obj
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.synctex.gz
+
+# Temp files
+*.tmp
+input.tmp
+input.txt
+calc_input.txt
+test_dfa.png
+test_slr1_final.png
+
+# Office temp files
+~$*
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/

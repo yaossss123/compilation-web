@@ -1,0 +1,61 @@
+# DFA Specification for Main Grammar Lexical Analysis
+# This file formally defines the lexical rules (token categories + DFA transitions)
+
+# Character Classes
+# ALPHA  = a-z A-Z
+# DIGIT  = 0-9
+# WS     = space tab newline
+# OTHER  = + - * / = < > ! ( ) [ ] { } ; , . & |
+
+# Token Categories and DFA Definitions
+
+# [1] IDENTIFIER / KEYWORD DFA
+# Q = {q0, q_id}, Sigma = {ALPHA, DIGIT}, F = {q_id}
+# q0 --ALPHA--> q_id
+# q_id --ALPHA--> q_id
+# q_id --DIGIT--> q_id
+# Accept: q_id -> check keyword table
+# Keywords: int float void if else while return input print
+
+# [2] INTEGER DFA
+# Q = {q0, q_num}, Sigma = {DIGIT}, F = {q_num}
+# q0 --DIGIT--> q_num
+# q_num --DIGIT--> q_num
+# Accept: q_num -> NUM
+
+# [3] FLOAT DFA
+# Q = {q0, q_int, q_dot, q_frac, q_e, q_es, q_exp}, Sigma = {DIGIT, ., e, E, +, -}, F = {q_frac, q_exp}
+# q0 --DIGIT--> q_int
+# q_int --DIGIT--> q_int
+# q_int --.--> q_dot
+# q0 --.--> q_dot
+# q_dot --DIGIT--> q_frac
+# q_frac --DIGIT--> q_frac
+# q_frac --e/E--> q_e
+# q_e --+/- --> q_es
+# q_es --DIGIT--> q_exp
+# q_e --DIGIT--> q_exp
+# q_exp --DIGIT--> q_exp
+# Accept: q_frac -> FLOAT, q_exp -> FLOAT
+
+# [4] COMPARISON OPERATORS DFA
+# Q = {q0, q_lt, q_gt, q_eq, q_ne}, Sigma = {<, >, =, !}, F = {q_lt, q_gt, q_eq, q_ne, q0}
+# q0 --<> q0:  -> q_lt(LSS)  |  <> -> q_lt(GEQ)
+# q0 -->> q0:  -> q_gt(GTR)  |  >= -> q_gt(GEQ)
+# q0 --== q_eq(EQU)
+# q0 --!= q_ne(NEQ)
+# q0 --=--> q0(ASG)
+
+# [5] LOGICAL OPERATORS DFA
+# Q = {q0, q_and, q_or}, Sigma = {&, |}, F = {q_and, q_or}
+# q0 --&--> (need &&) q_and(AND)
+# q0 --|--> (need ||) q_or(OR)
+
+# [6] ARITHMETIC OPERATORS (single-char)
+# q0 --> ADD(+)  |  SUB(-)  |  MUL(*)  |  DIV(/)
+
+# [7] DELIMITERS (single-char)
+# q0 --> LPAR( ()  |  RPAR())  |  LBK([)  |  RBK(])  |  LBR({)  |  RBR(})  |  SEMI(;)  |  CMA(,)
+
+# [8] COMMENT
+# q0 --> / --> / --> skip until end of line

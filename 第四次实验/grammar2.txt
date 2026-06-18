@@ -1,0 +1,2 @@
+# SLR(1) 测试文法2 - if-else简单语句
+S -> a S b | a S | c

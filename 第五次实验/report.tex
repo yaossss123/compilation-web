@@ -1,0 +1,124 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{graphicx}
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  numbers=left,numberstyle=\tiny\color{gray},
+  frame=single,rulecolor=\color{black!30},
+  breaklines=true,breakatwhitespace=true,
+  language=C++
+}
+
+\title{\textbf{编译器设计专题实验报告}\\[0.5em]实验五：语义分析框架实现}
+\author{张凌曜 \quad 2234214014 \quad 计算机2306}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{实验目的}
+在词法分析和语法分析的基础上，构建AST（抽象语法树）和符号表，做类型检查和语义错误检测（比如重复声明、未声明变量）。
+
+\section{实验原理}
+语义分析是编译的第三阶段。AST用树形结构表示程序的语法层次，符号表记录变量名、类型、作用域这些信息，类型检查就是看赋值和运算中类型对不对得上。
+
+本实验用递归下降解析器，解析的同时建树和填符号表。
+
+\section{实验过程}
+
+\subsection{AST节点}
+每个AST节点有类型（FuncDecl、VarDecl、Assign、If、While等）、值（变量名、运算符）、数据类型（int/float）和子节点列表。
+
+\subsection{符号表}
+符号表用作用域栈实现。每进一个代码块（函数体、if块）压一层新作用域，退出时弹出。变量查找从内到外逐层找，先找到先用，这样能处理变量遮蔽。重复声明检测只看当前作用域内有没有同名变量。
+
+\subsection{类型推断}
+二元运算的类型推断规则很简单：任一操作数是float结果就是float，否则是int。
+
+\section{测试结果}
+
+测试程序：
+
+\begin{lstlisting}[language={}]
+int main() {
+    int x;
+    float y;
+    x = 5;
+    y = 3.14;
+    if (x < 10) {
+        x = x + 1;
+    }
+    while (y > 0) {
+        y = y - 1.0;
+    }
+    print x;
+    return 0;
+}
+\end{lstlisting}
+
+程序输出的AST（缩进表示层级）：
+
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+Program
+  FuncDecl(main) :int
+    Params
+    Block
+      VarDecl(x) :int
+      VarDecl(y) :float
+      Assign(x) :int
+        ID(x)
+        IntConst(5) :int
+      Assign(y) :float
+        ID(y)
+        FloatConst(3.14) :float
+      If
+        BinOp(<)
+          ID(x) :int
+          IntConst(10) :int
+        Block
+          Assign(x) :int
+            ID(x)
+            BinOp(+) :int
+              ID(x) :int
+              IntConst(1) :int
+      While
+        BinOp(>)
+          ID(y) :float
+          IntConst(0) :int
+        Block
+          Assign(y) :float
+            ID(y)
+            BinOp(-) :float
+              ID(y) :float
+              FloatConst(1.0) :float
+      Print
+        ID(x) :int
+      Return
+        IntConst(0) :int
+\end{lstlisting}
+
+符号表在作用域0记录了函数\texttt{main}的签名\texttt{int()}。语义检查结果：未检测到语义错误，符合预期——变量声明、赋值、if/while的类型都匹配正确。
+
+\begin{center}
+\includegraphics[width=\textwidth,height=7cm,keepaspectratio]{image/1.png}
+\end{center}
+
+\begin{center}
+\includegraphics[width=\textwidth,height=6cm,keepaspectratio]{image/2.png}
+\end{center}
+
+\section{实验总结}
+递归下降写起来有个容易搞混的地方：同样是\texttt{int x}后面跟分号是变量声明，跟左括号就是函数声明，需要往前多看一个Token才能确定。
+
+整体来说AST能比较清楚地反映程序结构，符号表的作用域栈处理变量遮蔽也没问题。
+
+\end{document}
