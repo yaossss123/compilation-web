@@ -23,8 +23,8 @@
             <button onclick="switchExp('dfa')" class="nav-item active" data-exp="dfa">
                 <span class="nav-icon">&#x1F4C4;</span> 实验一: DFA
             </button>
-            <button onclick="switchExp('ll1')" class="nav-item" data-exp="ll1">
-                <span class="nav-icon">&#x1F4C4;</span> 实验二: LL(1)
+            <button onclick="switchExp('scanner')" class="nav-item" data-exp="scanner">
+                <span class="nav-icon">&#x1F4C4;</span> 实验二: 词法分析
             </button>
             <button onclick="switchExp('lr0')" class="nav-item" data-exp="lr0">
                 <span class="nav-icon">&#x1F4C4;</span> 实验三: LR(0)
@@ -130,46 +130,43 @@ q2 a q0</textarea>
             </div>
         </div>
 
-        <!-- ========== LL(1) PAGE ========== -->
-        <div id="page-ll1" class="page">
+        <!-- ========== SCANNER PAGE ========== -->
+        <div id="page-scanner" class="page">
             <div class="page-header">
-                <h1 class="page-title">实验二: LL(1) 语法分析</h1>
-                <p class="page-desc">输入文法，计算FIRST/FOLLOW集，构造预测分析表，动画展示自上而下的推导过程。</p>
+                <h1 class="page-title">实验二: 词法分析扫描器</h1>
+                <p class="page-desc">输入源代码，逐字符扫描并识别Token（标识符、关键字、整数、浮点数、运算符、界符），支持单行分析和完整源程序分析，输出Token流和统计信息。</p>
             </div>
             <div class="content-grid">
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; 文法定义</span>
-                        <label class="upload-link">
-                            &#x1F4C1; 上传文件
-                            <input type="file" accept=".txt" class="hidden" onchange="loadLL1File(event)">
-                        </label>
+                        <span>&#x2705; 源代码输入</span>
                     </div>
                     <div class="form-group">
-                        <label>产生式 <span class="text-gray-400 text-xs">(用 -> 推导，| 分隔)</span></label>
-                        <textarea id="ll1-input" rows="8" placeholder="E -> T E'&#10;E' -> + T E' | $&#10;T -> F T'&#10;T' -> * F T' | $&#10;F -> ( E ) | id">E -> T E'
-E' -> + T E' | $
-T -> F T'
-T' -> * F T' | $
-F -> ( E ) | id</textarea>
+                        <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while 等关键字)</span></label>
+                        <textarea id="scan-input" rows="10" placeholder="int main() {&#10;  int a = 3 + 5 * 2;&#10;  float b = 1.5;&#10;  if (a > b) {&#10;    print a;&#10;  }&#10;  return 0;&#10;}">int main() {
+  int a = 3 + 5 * 2;
+  float b = 1.5;
+  if (a > b) {
+    print a;
+  }
+  return 0;
+}</textarea>
                     </div>
-                    <button onclick="runLL1()" class="btn-primary w-full">构造分析表</button>
+                    <button onclick="runScanner()" class="btn-primary w-full">词法分析</button>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">预测分析表</div>
-                    <div id="ll1-table" class="overflow-auto" style="max-height:400px">
-                        <div class="graph-placeholder"><p>解析文法后显示分析表</p></div>
+                    <div class="panel-header">&#x1F4CB; Token 流</div>
+                    <div id="scan-output" class="result-box" style="max-height:400px;overflow:auto">
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
                 </div>
             </div>
             <div class="content-grid mt-4">
-                <div class="panel">
-                    <div class="panel-header">&#x1F9EA; 字符串推导</div>
-                    <div class="form-row">
-                        <input id="ll1-string" type="text" class="flex-1" placeholder="输入测试字符串，如 id + id * id" value="id + id * id">
-                        <button onclick="runLL1Parse()" class="btn-secondary">推导</button>
+                <div class="panel" style="grid-column:1/-1">
+                    <div class="panel-header">&#x1F4CA; 统计信息</div>
+                    <div id="scan-stats" class="result-box">
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
-                    <div id="ll1-derivation" class="result-box mt-2" style="max-height:300px;overflow:auto"></div>
                 </div>
             </div>
         </div>
@@ -353,7 +350,7 @@ F -> ( E ) | id</textarea>
     </main>
 
     <script src="js/dfa.js"></script>
-    <script src="js/ll1.js"></script>
+    <script src="js/scanner.js"></script>
     <script src="js/lr0.js"></script>
     <script src="js/slr1.js"></script>
     <script src="js/semantic.js"></script>
