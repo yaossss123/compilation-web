@@ -8,19 +8,38 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning,arrows}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage[colorlinks,linkcolor=blue!70!black,urlcolor=blue!60!black]{hyperref}
+
+% 主题配色
+\definecolor{themecolor}{RGB}{30,64,175}
+\definecolor{codebg}{RGB}{245,247,250}
+\definecolor{codeframe}{RGB}{100,116,139}
+
+% 章节标题样式
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\color{themecolor}}{\thesection}{0.8em}{}[\vspace{-0.5em}\rule{\textwidth}{0.4pt}]
+\titlespacing*{\section}{0pt}{1.2em}{0.6em}
+\titleformat{\subsection}{\large\bfseries\color{themecolor!80}}{\thesubsection}{0.8em}{}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.3em}
 
 \lstset{
   basicstyle=\small\ttfamily,
-  keywordstyle=\color{blue}\bfseries,
-  commentstyle=\color{gray}\itshape,
-  stringstyle=\color{red},
+  keywordstyle=\color{blue!80!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!70!black},
   numbers=left,numberstyle=\tiny\color{gray},
-  frame=single,rulecolor=\color{black!30},
+  backgroundcolor=\color{codebg},
+  frame=single,rulecolor=\color{codeframe!40},
   breaklines=true,breakatwhitespace=true,
-  language=C++
+  language=C++,
+  aboveskip=0.8em,belowskip=0.6em
 }
 
-\title{\textbf{编译器设计专题实验报告}\\[0.5em]实验一：DFA模拟器实现}
+\newtcolorbox{webox}{colback=blue!5!white,colframe=themecolor,coltitle=white,fonttitle=\bfseries,title=Web前端展示,boxrule=0.5pt,arc=3pt}
+
+\title{\textbf{编译器设计专题实验报告}\\[0.5em]\Large\color{themecolor}实验一：DFA模拟器实现}
 \author{张凌曜 \quad 2234214014 \quad 计算机2306}
 \date{}
 
@@ -134,6 +153,18 @@ b & -- & 拒绝 \\
 写BFS枚举的时候踩了个坑：一开始用\texttt{const auto\&}引用队列里的vector元素，结果\texttt{push\_back}触发vector扩容后引用就悬空了，程序直接崩。改成值拷贝就没事了，C++容器迭代器失效这块确实得注意。
 
 整体来说这个实验难度还行，文件输入格式设计比较直观，两个功能都能跑通。
+
+\begin{webox}
+本实验的DFA模拟功能已实现为Web前端页面，可在浏览器中直接操作，无需安装任何软件。
+
+\textbf{主要功能：}五元组输入、DFA状态图可视化（基于vis.js库）、字符串接受/拒绝测试、长度$\leq N$的合法字符串BFS枚举。
+
+\begin{center}
+\includegraphics[width=0.9\textwidth,height=5.5cm,keepaspectratio]{image/web.png}
+\end{center}
+
+前端采用深色主题设计，输入区与可视化区左右分栏，状态图支持拖拽和缩放，交互体验较好。
+\end{webox}
 
 \appendix
 \section{附录：代码仓库}

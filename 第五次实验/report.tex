@@ -7,18 +7,36 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{graphicx}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage[colorlinks,linkcolor=blue!70!black,urlcolor=blue!60!black]{hyperref}
+
+\definecolor{themecolor}{RGB}{30,64,175}
+\definecolor{codebg}{RGB}{245,247,250}
+\definecolor{codeframe}{RGB}{100,116,139}
+
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\color{themecolor}}{\thesection}{0.8em}{}[\vspace{-0.5em}\rule{\textwidth}{0.4pt}]
+\titlespacing*{\section}{0pt}{1.2em}{0.6em}
+\titleformat{\subsection}{\large\bfseries\color{themecolor!80}}{\thesubsection}{0.8em}{}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.3em}
 
 \lstset{
   basicstyle=\small\ttfamily,
-  keywordstyle=\color{blue}\bfseries,
-  commentstyle=\color{gray}\itshape,
+  keywordstyle=\color{blue!80!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!70!black},
   numbers=left,numberstyle=\tiny\color{gray},
-  frame=single,rulecolor=\color{black!30},
+  backgroundcolor=\color{codebg},
+  frame=single,rulecolor=\color{codeframe!40},
   breaklines=true,breakatwhitespace=true,
-  language=C++
+  language=C++,
+  aboveskip=0.8em,belowskip=0.6em
 }
 
-\title{\textbf{编译器设计专题实验报告}\\[0.5em]实验五：语义分析框架实现}
+\newtcolorbox{webox}{colback=blue!5!white,colframe=themecolor,coltitle=white,fonttitle=\bfseries,title=Web前端展示,boxrule=0.5pt,arc=3pt}
+
+\title{\textbf{编译器设计专题实验报告}\\[0.5em]\Large\color{themecolor}实验五：语义分析框架实现}
 \author{张凌曜 \quad 2234214014 \quad 计算机2306}
 \date{}
 
@@ -120,6 +138,18 @@ Program
 递归下降写起来有个容易搞混的地方：同样是\texttt{int x}后面跟分号是变量声明，跟左括号就是函数声明，需要往前多看一个Token才能确定。
 
 整体来说AST能比较清楚地反映程序结构，符号表的作用域栈处理变量遮蔽也没问题。
+
+\begin{webox}
+本实验的语义分析功能已实现为Web前端页面，与C++版semantic.cpp逻辑一致。
+
+\textbf{主要功能：}源代码输入、抽象语法树（AST）可视化展示（树形结构，节点标注类型和值）、作用域符号表展示（按作用域分组）、语义错误检测（重复声明、未声明变量、类型不匹配）。
+
+\begin{center}
+\includegraphics[width=0.9\textwidth,height=5.5cm,keepaspectratio]{image/web.png}
+\end{center}
+
+前端采用递归下降解析器构建AST，支持函数声明、变量声明、赋值、if/else、while、return、print等语句类型。
+\end{webox}
 
 \appendix
 \section{附录：代码仓库}

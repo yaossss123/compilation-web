@@ -8,19 +8,36 @@
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows}
 \usepackage{graphicx}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage[colorlinks,linkcolor=blue!70!black,urlcolor=blue!60!black]{hyperref}
+
+\definecolor{themecolor}{RGB}{30,64,175}
+\definecolor{codebg}{RGB}{245,247,250}
+\definecolor{codeframe}{RGB}{100,116,139}
+
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\color{themecolor}}{\thesection}{0.8em}{}[\vspace{-0.5em}\rule{\textwidth}{0.4pt}]
+\titlespacing*{\section}{0pt}{1.2em}{0.6em}
+\titleformat{\subsection}{\large\bfseries\color{themecolor!80}}{\thesubsection}{0.8em}{}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.3em}
 
 \lstset{
   basicstyle=\small\ttfamily,
-  keywordstyle=\color{blue}\bfseries,
-  commentstyle=\color{gray}\itshape,
-  stringstyle=\color{red},
+  keywordstyle=\color{blue!80!black}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{red!70!black},
   numbers=left,numberstyle=\tiny\color{gray},
-  frame=single,rulecolor=\color{black!30},
+  backgroundcolor=\color{codebg},
+  frame=single,rulecolor=\color{codeframe!40},
   breaklines=true,breakatwhitespace=true,
-  language=C++
+  language=C++,
+  aboveskip=0.8em,belowskip=0.6em
 }
 
-\title{\textbf{编译器设计专题实验报告}\\[0.5em]实验二：词法分析扫描器实现}
+\newtcolorbox{webox}{colback=blue!5!white,colframe=themecolor,coltitle=white,fonttitle=\bfseries,title=Web前端展示,boxrule=0.5pt,arc=3pt}
+
+\title{\textbf{编译器设计专题实验报告}\\[0.5em]\Large\color{themecolor}实验二：词法分析扫描器实现}
 \author{张凌曜 \quad 2234214014 \quad 计算机2306}
 \date{}
 
@@ -120,6 +137,18 @@ www & ID \\
 选做部分把DFA整合进来后，可以直观地看到词法分析和DFA模拟的关系——词法分析器内部其实就是多个DFA在并行工作，每个Token类别对应一个DFA。
 
 词法分析器虽然只是编译的第一步，但Token流的质量直接影响后面语法分析，所以边界情况处理还是比较重要的。
+
+\begin{webox}
+本实验的词法分析功能已实现为Web前端页面，与C++版scanner逻辑完全一致。
+
+\textbf{主要功能：}源代码输入、逐行Token流展示（彩色标签区分关键字/标识符/数字/运算符/界符）、Token统计信息（总数、各类别计数、标识符与数字列表）。
+
+\begin{center}
+\includegraphics[width=0.9\textwidth,height=5.5cm,keepaspectratio]{image/web.png}
+\end{center}
+
+前端词法分析器支持全部9个关键字、整数/浮点数（含科学计数法）、双字符和单字符运算符的识别，可处理\texttt{//}行注释。
+\end{webox}
 
 \appendix
 \section{附录：代码仓库}
