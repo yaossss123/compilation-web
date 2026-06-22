@@ -306,7 +306,7 @@ F -> ( E ) | id</textarea>
                 <h1 class="page-title">实验六: 中间代码生成</h1>
                 <p class="page-desc">输入源代码，生成四元式中间代码 (op, arg1, arg2, result)，支持表达式翻译（运算符优先级）、控制流跳转（if/while的LABEL/JZ/JMP）。</p>
             </div>
-            <div class="content-grid">
+            <div class="content-grid" style="grid-template-columns:1fr 1.5fr 0.8fr 0.8fr">
                 <div class="panel">
                     <div class="panel-header">
                         <span>&#x2705; 源代码输入</span>
@@ -330,8 +330,6 @@ F -> ( E ) | id</textarea>
                         <p class="text-gray-400 text-sm">生成后显示</p>
                     </div>
                 </div>
-            </div>
-            <div class="content-grid mt-4">
                 <div class="panel">
                     <div class="panel-header">&#x1F4DA; 符号表</div>
                     <div id="irgen-symtable" class="result-box">
