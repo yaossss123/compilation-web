@@ -177,10 +177,11 @@ function renderScanner() {
 
     // 统计信息
     const stats = { keywords: 0, identifiers: 0, numbers: 0, operators: 0, delimiters: 0 };
+    const kwValues = new Set(['int','float','void','if','else','while','return','input','print']);
     for (const t of allTokens) {
-        if (['INT','FLOAT','VOID','IF','ELSE','WHILE','RETURN','INPUT','PRINT'].includes(t.type)) stats.keywords++;
+        if (kwValues.has(t.value)) stats.keywords++;
         else if (t.type === 'ID') stats.identifiers++;
-        else if (['NUM','FLOAT'].includes(t.type)) stats.numbers++;
+        else if (t.type === 'NUM' || (t.type === 'FLOAT' && !kwValues.has(t.value))) stats.numbers++;
         else if (['ADD','SUB','MUL','DIV','ASG','LSS','GTR','LEQ','GEQ','EQU','NEQ','AND','OR','NOT'].includes(t.type)) stats.operators++;
         else if (['LPAR','RPAR','LBK','RBK','LBR','RBR','CMA','SEMI'].includes(t.type)) stats.delimiters++;
     }
@@ -197,7 +198,7 @@ function renderScanner() {
     // 各类别详细列表
     sHtml += '<div style="margin-top:12px;font-size:0.8rem;color:#94a3b8">';
     const idSet = new Set(allTokens.filter(t => t.type === 'ID').map(t => t.value));
-    const numSet = new Set(allTokens.filter(t => t.type === 'NUM' || t.type === 'FLOAT').map(t => t.value));
+    const numSet = new Set(allTokens.filter(t => t.type === 'NUM' || (t.type === 'FLOAT' && !kwValues.has(t.value))).map(t => t.value));
     if (idSet.size > 0) sHtml += '<div><strong>标识符:</strong> ' + [...idSet].join(', ') + '</div>';
     if (numSet.size > 0) sHtml += '<div><strong>数字:</strong> ' + [...numSet].join(', ') + '</div>';
     sHtml += '</div>';

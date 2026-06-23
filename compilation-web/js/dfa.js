@@ -101,7 +101,6 @@ function runDfa() {
 function testDfaString() {
     if (!currentDfa) { alert('请先解析DFA'); return; }
     const inputStr = document.getElementById('dfa-string').value;
-    if (!inputStr) return;
 
     const dfa = currentDfa;
     let cur = dfa.startState;
@@ -119,7 +118,7 @@ function testDfaString() {
     const div = document.getElementById('dfa-result');
     div.classList.remove('hidden');
     div.innerHTML = `
-        <p><strong>输入:</strong> <code>${inputStr}</code></p>
+        <p><strong>输入:</strong> <code>${inputStr || '(空字符串 ε)'}</code></p>
         <p><strong>路径:</strong> ${path.join(' → ')}</p>
         <p><strong>结果:</strong> <span class="${accepted ? 'result-accept' : 'result-reject'}">${accepted ? '✓ ACCEPT' : '✗ REJECT'}</span></p>
         ${!ok ? '<p class="text-red-500 text-xs">转移中断：无对应出边</p>' : ''}

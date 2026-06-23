@@ -69,12 +69,13 @@ function semLex(src) {
 // ===== Symbol Table =====
 function SemSymbolTable() {
     const scopes = [[]];
+    const allScopes = [scopes[0]]; // 保留所有作用域（含已弹出的）
     return {
-        pushScope() { scopes.push([]); },
+        pushScope() { const s = []; scopes.push(s); allScopes.push(s); },
         popScope() { if (scopes.length > 1) scopes.pop(); },
         insert(entry) {
             for (const e of scopes[scopes.length-1]) { if (e.name === entry.name) return false; }
-            scopes[scopes.length-1].push({...entry, scope: scopes.length-1});
+            scopes[scopes.length-1].push({...entry, scope: allScopes.indexOf(scopes[scopes.length-1])});
             return true;
         },
         lookup(name) {
@@ -82,7 +83,7 @@ function SemSymbolTable() {
                 for (const e of scopes[i]) if (e.name === name) return e;
             return null;
         },
-        getScopes() { return scopes; }
+        getScopes() { return allScopes; }
     };
 }
 
