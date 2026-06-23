@@ -122,7 +122,7 @@ const TOKEN_COLORS = {
     // 标识符
     ID: '#10b981',
     // 数字
-    NUM: '#f59e0b', FLOAT: '#f59e0b',
+    NUM: '#f59e0b',
     // 运算符
     ADD: '#ef4444', SUB: '#ef4444', MUL: '#ef4444', DIV: '#ef4444',
     ASG: '#ef4444', LSS: '#ef4444', GTR: '#ef4444',
@@ -215,7 +215,21 @@ function escHtml(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// 文件导入
+function loadScannerFile(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('scan-input').value = e.target.result;
+        document.getElementById('scan-file-name').textContent = file.name;
+        document.getElementById('scan-file-name').style.color = '#10b981';
+    };
+    reader.readAsText(file);
+}
+
 // 入口函数（供 index.html onclick 调用）
 function runScanner() {
     renderScanner();
 }
+
