@@ -64,11 +64,11 @@
                     </div>
                     <div class="form-group">
                         <label>Alphabet (字母表)</label>
-                        <input id="dfa-alphabet" type="text" value="a b" placeholder="如 a b">
+                        <input id="dfa-alphabet" type="text" value="0 1" placeholder="如 a b">
                     </div>
                     <div class="form-group">
                         <label>States (状态集)</label>
-                        <input id="dfa-states" type="text" value="q0 q1 q2" placeholder="如 q0 q1 q2">
+                        <input id="dfa-states" type="text" value="q0 q1 q2 q3" placeholder="如 q0 q1 q2">
                     </div>
                     <div class="form-row">
                         <div class="form-group flex-1">
@@ -77,14 +77,19 @@
                         </div>
                         <div class="form-group flex-1">
                             <label>Accept (接受)</label>
-                            <input id="dfa-accept" type="text" value="q2">
+                            <input id="dfa-accept" type="text" value="q3">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Transitions <span class="text-gray-400 text-xs">(格式: from char to)</span></label>
-                        <textarea id="dfa-transitions" rows="4" placeholder="q0 a q1&#10;q1 b q2&#10;q2 a q0">q0 a q1
-q1 b q2
-q2 a q0</textarea>
+                        <textarea id="dfa-transitions" rows="4" placeholder="q0 a q1&#10;q1 b q2&#10;q2 a q0">q0 0 q0
+q0 1 q1
+q1 0 q2
+q1 1 q1
+q2 0 q0
+q2 1 q3
+q3 0 q2
+q3 1 q1</textarea>
                     </div>
                     <button onclick="runDfa()" class="btn-primary w-full">解析并生成图</button>
                 </div>
@@ -143,13 +148,24 @@ q2 a q0</textarea>
                     </div>
                     <div class="form-group">
                         <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while 等关键字)</span></label>
-                        <textarea id="scan-input" rows="10" placeholder="int main() {&#10;  int a = 3 + 5 * 2;&#10;  float b = 1.5;&#10;  if (a > b) {&#10;    print a;&#10;  }&#10;  return 0;&#10;}">int main() {
-  int a = 3 + 5 * 2;
-  float b = 1.5;
-  if (a > b) {
-    print a;
-  }
-  return 0;
+                        <textarea id="scan-input" rows="12" placeholder="int main() {&#10;  int a = 3 + 5 * 2;&#10;  float b = 1.5;&#10;  if (a > b) {&#10;    print a;&#10;  }&#10;  return 0;&#10;}">int main() {
+    int a = 10;
+    int b = 3;
+    float c = 2.5;
+    int result = 0;
+    result = a + b * 2;
+    c = result / 4.0;
+    if (result > 10 && c <= 5.0) {
+        print result;
+    } else {
+        print c;
+    }
+    while (a > 0) {
+        a = a - 1;
+        b = b + 2;
+    }
+    print b;
+    return 0;
 }</textarea>
                     </div>
                     <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem">
@@ -271,15 +287,27 @@ F -> ( E ) | id</textarea>
                     </div>
                     <div class="form-group">
                         <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while/return)</span></label>
-                        <textarea id="sem-input" rows="10" placeholder="int main() {&#10;  int a;&#10;  a = 3 + 5;&#10;  return a;&#10;}">int main() {
-  int a;
-  float b;
-  a = 3 + 5;
-  b = a * 2.0;
-  if (a > b) {
-    print a;
-  }
-  return a;
+                        <textarea id="sem-input" rows="12" placeholder="int main() {&#10;  int a;&#10;  a = 3 + 5;&#10;  return a;&#10;}">int main() {
+    int a;
+    int b;
+    float c;
+    int flag;
+    a = 3 + 5 * 2;
+    b = a - 4;
+    c = a * 2.0 + 1.5;
+    flag = 0;
+    if (a > b && c <= 20.0) {
+        flag = 1;
+        print a;
+    } else {
+        flag = 0;
+        print b;
+    }
+    while (a > 0) {
+        a = a - 1;
+    }
+    print flag;
+    return c;
 }</textarea>
                     </div>
                     <button onclick="runSemantic()" class="btn-primary w-full">语义分析</button>
@@ -320,13 +348,23 @@ F -> ( E ) | id</textarea>
                     </div>
                     <div class="form-group">
                         <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while/return/print/input)</span></label>
-                        <textarea id="irgen-input" rows="10" placeholder="int main() {&#10;  int x;&#10;  x = 3 + 5 * 2;&#10;  return x;&#10;}">int main() {
-  int x;
-  x = 3 + 5 * 2;
-  if (x > 10) {
-    print x;
-  }
-  return x;
+                        <textarea id="irgen-input" rows="12" placeholder="int main() {&#10;  int x;&#10;  x = 3 + 5 * 2;&#10;  return x;&#10;}">int main() {
+    int a;
+    int b;
+    int c;
+    a = 10 + 3 * 2;
+    b = a - 4;
+    c = 0;
+    if (a > b) {
+        c = a + b;
+        print c;
+    }
+    while (b > 0) {
+        b = b - 1;
+        c = c + 2;
+    }
+    print c;
+    return c;
 }</textarea>
                     </div>
                     <button onclick="runIRGen()" class="btn-primary w-full">生成四元式</button>
