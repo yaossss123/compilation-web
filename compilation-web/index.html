@@ -152,6 +152,13 @@ q2 a q0</textarea>
   return 0;
 }</textarea>
                     </div>
+                    <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem">
+                        <label style="flex:1;cursor:pointer;text-align:center;padding:0.5rem;border:1px dashed #a78bfa;border-radius:0.5rem;color:#7c3aed;font-size:0.85rem;transition:all 0.15s" onmouseover="this.style.background='#f5f3ff'" onmouseout="this.style.background='transparent'">
+                            &#x1F4C1; 导入文件
+                            <input type="file" accept=".src,.c,.txt,.cpp,.h" style="display:none" onchange="loadScannerFile(event)">
+                        </label>
+                        <span id="scan-file-name" style="flex:1;display:flex;align-items:center;font-size:0.75rem;color:#9ca3af;padding-left:0.5rem">未选择文件</span>
+                    </div>
                     <button onclick="runScanner()" class="btn-primary w-full">词法分析</button>
                 </div>
                 <div class="panel">
