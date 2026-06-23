@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>缂栬瘧鍘熺悊瀹為獙骞冲彴</title>
+    <title>编译原理实验平台</title>
     <script src="css/tailwind.min.js"></script>
     <script src="js/vis-network.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -15,28 +15,28 @@
         <div class="sidebar-header">
             <span class="sidebar-logo">&lt;/&gt;</span>
             <div>
-                <div class="sidebar-title">缂栬瘧鍘熺悊</div>
-                <div class="sidebar-sub">瀹為獙婕旂ず骞冲彴</div>
+                <div class="sidebar-title">编译原理</div>
+                <div class="sidebar-sub">实验演示平台</div>
             </div>
         </div>
         <nav class="sidebar-nav">
             <button onclick="switchExp('dfa')" class="nav-item active" data-exp="dfa">
-                <span class="nav-icon">&#x1F4C4;</span> 瀹為獙涓€: DFA
+                <span class="nav-icon">&#x1F4C4;</span> 实验一: DFA
             </button>
             <button onclick="switchExp('scanner')" class="nav-item" data-exp="scanner">
-                <span class="nav-icon">&#x1F4C4;</span> 瀹為獙浜? 璇嶆硶鍒嗘瀽
+                <span class="nav-icon">&#x1F4C4;</span> 实验二: 词法分析
             </button>
             <button onclick="switchExp('lr0')" class="nav-item" data-exp="lr0">
-                <span class="nav-icon">&#x1F4C4;</span> 瀹為獙涓? LR(0)
+                <span class="nav-icon">&#x1F4C4;</span> 实验三: LR(0)
             </button>
             <button onclick="switchExp('slr1')" class="nav-item" data-exp="slr1">
-                <span class="nav-icon">&#x1F4C4;</span> 瀹為獙鍥? SLR(1)
+                <span class="nav-icon">&#x1F4C4;</span> 实验四: SLR(1)
             </button>
             <button onclick="switchExp('semantic')" class="nav-item" data-exp="semantic">
-                <span class="nav-icon">&#x1F4C4;</span> 瀹為獙浜? 璇箟鍒嗘瀽
+                <span class="nav-icon">&#x1F4C4;</span> 实验五: 语义分析
             </button>
             <button onclick="switchExp('irgen')" class="nav-item" data-exp="irgen">
-                <span class="nav-icon">&#x1F4C4;</span> 瀹為獙鍏? 涓棿浠ｇ爜
+                <span class="nav-icon">&#x1F4C4;</span> 实验六: 中间代码
             </button>
         </nav>
         <div class="sidebar-footer">Compilation Web</div>
@@ -48,40 +48,40 @@
         <!-- ========== DFA PAGE ========== -->
         <div id="page-dfa" class="page active">
             <div class="page-header">
-                <h1 class="page-title">瀹為獙涓€: DFA 妯℃嫙涓庡彲瑙嗗寲</h1>
-                <p class="page-desc">閫氳繃杈撳叆浜斿厓缁勫畾涔夛紙瀛楁瘝琛ㄤ笂鐨勭鍙凤級锛屾ā鎷烡FA杩愯锛岄獙璇佸瓧绗︿覆锛屽苟鐢熸垚鍙鍖栫殑鐘舵€佽浆鎹㈠浘銆?/p>
+                <h1 class="page-title">实验一: DFA 模拟与可视化</h1>
+                <p class="page-desc">通过输入五元组定义（字母表上的符号），模拟DFA运行，验证字符串，并生成可视化的状态转换图。</p>
             </div>
 
             <div class="content-grid">
                 <!-- Left: DFA Definition -->
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; DFA 瀹氫箟</span>
+                        <span>&#x2705; DFA 定义</span>
                         <label class="upload-link">
-                            &#x1F4C1; 涓婁紶鏂囦欢
+                            &#x1F4C1; 上传文件
                             <input type="file" accept=".txt,.dfa" class="hidden" onchange="loadDfaFile(event)">
                         </label>
                     </div>
                     <div class="form-group">
-                        <label>Alphabet (瀛楁瘝琛?</label>
-                        <input id="dfa-alphabet" type="text" value="0 1" placeholder="濡?a b">
+                        <label>Alphabet (字母表)</label>
+                        <input id="dfa-alphabet" type="text" value="0 1" placeholder="如 a b">
                     </div>
                     <div class="form-group">
-                        <label>States (鐘舵€侀泦)</label>
-                        <input id="dfa-states" type="text" value="q0 q1 q2 q3" placeholder="濡?q0 q1 q2">
+                        <label>States (状态集)</label>
+                        <input id="dfa-states" type="text" value="q0 q1 q2 q3" placeholder="如 q0 q1 q2">
                     </div>
                     <div class="form-row">
                         <div class="form-group flex-1">
-                            <label>Start (璧峰)</label>
+                            <label>Start (起始)</label>
                             <input id="dfa-start" type="text" value="q0">
                         </div>
                         <div class="form-group flex-1">
-                            <label>Accept (鎺ュ彈)</label>
+                            <label>Accept (接受)</label>
                             <input id="dfa-accept" type="text" value="q3">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Transitions <span class="text-gray-400 text-xs">(鏍煎紡: from char to)</span></label>
+                        <label>Transitions <span class="text-gray-400 text-xs">(格式: from char to)</span></label>
                         <textarea id="dfa-transitions" rows="4" placeholder="q0 a q1&#10;q1 b q2&#10;q2 a q0">q0 0 q0
 q0 1 q1
 q1 0 q2
@@ -91,22 +91,22 @@ q2 1 q3
 q3 0 q2
 q3 1 q1</textarea>
                     </div>
-                    <button onclick="runDfa()" class="btn-primary w-full">瑙ｆ瀽骞剁敓鎴愬浘</button>
+                    <button onclick="runDfa()" class="btn-primary w-full">解析并生成图</button>
                 </div>
 
                 <!-- Right: Graph -->
                 <div class="panel">
-                    <div class="panel-header">鐘舵€佽浆鎹㈠浘 <span class="text-gray-400 text-xs">(鍙嫋鎷?</span></div>
+                    <div class="panel-header">状态转换图 <span class="text-gray-400 text-xs">(可拖拽)</span></div>
                     <div id="dfa-graph" class="graph-container">
                         <div class="graph-placeholder">
                             <div class="placeholder-icon">&#x2B21;</div>
-                            <p>鍦ㄥ乏渚цВ鏋怐FA鍚庯紝姝ゅ灏嗘樉绀哄浘褰?/p>
+                            <p>在左侧解析DFA后，此处将显示图形</p>
                         </div>
                     </div>
                     <div class="graph-legend">
-                        <span class="legend-item"><span class="legend-dot bg-green-400"></span> 璧峰鐘舵€?/span>
-                        <span class="legend-item"><span class="legend-dot bg-blue-400"></span> 鎺ュ彈鐘舵€?/span>
-                        <span class="legend-item"><span class="legend-dot bg-gray-400"></span> 鏅€氱姸鎬?/span>
+                        <span class="legend-item"><span class="legend-dot bg-green-400"></span> 起始状态</span>
+                        <span class="legend-item"><span class="legend-dot bg-blue-400"></span> 接受状态</span>
+                        <span class="legend-item"><span class="legend-dot bg-gray-400"></span> 普通状态</span>
                     </div>
                 </div>
             </div>
@@ -114,20 +114,20 @@ q3 1 q1</textarea>
             <!-- Function Test -->
             <div class="content-grid mt-4">
                 <div class="panel">
-                    <div class="panel-header">&#x1F9EA; 鍔熻兘娴嬭瘯</div>
+                    <div class="panel-header">&#x1F9EA; 功能测试</div>
                     <div class="form-row items-end">
                         <div class="form-group flex-1">
-                            <label>鐢熸垚闀垮害 鈮?N 鐨勬帴鍙楀瓧绗︿覆</label>
+                            <label>生成长度 ≤ N 的接受字符串</label>
                             <input id="dfa-maxlen" type="number" value="5" min="1" max="10">
                         </div>
-                        <button onclick="enumerateDfa()" class="btn-secondary">鐢熸垚</button>
+                        <button onclick="enumerateDfa()" class="btn-secondary">生成</button>
                     </div>
                     <div id="dfa-enum" class="result-box hidden"></div>
                     <div class="form-group mt-3">
-                        <label>娴嬭瘯瀛楃涓叉槸鍚﹁鎺ュ彈</label>
+                        <label>测试字符串是否被接受</label>
                         <div class="form-row">
-                            <input id="dfa-string" type="text" class="flex-1" placeholder="杈撳叆瀛楃涓诧紝濡?ab">
-                            <button onclick="testDfaString()" class="btn-secondary">娴嬭瘯</button>
+                            <input id="dfa-string" type="text" class="flex-1" placeholder="输入字符串，如 ab">
+                            <button onclick="testDfaString()" class="btn-secondary">测试</button>
                         </div>
                     </div>
                     <div id="dfa-result" class="result-box hidden mt-2"></div>
@@ -138,16 +138,16 @@ q3 1 q1</textarea>
         <!-- ========== SCANNER PAGE ========== -->
         <div id="page-scanner" class="page">
             <div class="page-header">
-                <h1 class="page-title">瀹為獙浜? 璇嶆硶鍒嗘瀽鎵弿鍣?/h1>
-                <p class="page-desc">杈撳叆婧愪唬鐮侊紝閫愬瓧绗︽壂鎻忓苟璇嗗埆Token锛堟爣璇嗙銆佸叧閿瓧銆佹暣鏁般€佹诞鐐规暟銆佽繍绠楃銆佺晫绗︼級锛屾敮鎸佸崟琛屽垎鏋愬拰瀹屾暣婧愮▼搴忓垎鏋愶紝杈撳嚭Token娴佸拰缁熻淇℃伅銆?/p>
+                <h1 class="page-title">实验二: 词法分析扫描器</h1>
+                <p class="page-desc">输入源代码，逐字符扫描并识别Token（标识符、关键字、整数、浮点数、运算符、界符），支持单行分析和完整源程序分析，输出Token流和统计信息。</p>
             </div>
             <div class="content-grid">
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; 婧愪唬鐮佽緭鍏?/span>
+                        <span>&#x2705; 源代码输入</span>
                     </div>
                     <div class="form-group">
-                        <label>婧愪唬鐮?<span class="text-gray-400 text-xs">(鏀寔 int/float/if/while 绛夊叧閿瓧)</span></label>
+                        <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while 等关键字)</span></label>
                         <textarea id="scan-input" rows="12" placeholder="int main() {&#10;  int a = 3 + 5 * 2;&#10;  float b = 1.5;&#10;  if (a > b) {&#10;    print a;&#10;  }&#10;  return 0;&#10;}">int main() {
     int a = 10;
     int b = 3;
@@ -170,25 +170,25 @@ q3 1 q1</textarea>
                     </div>
                     <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem">
                         <label style="flex:1;cursor:pointer;text-align:center;padding:0.5rem;border:1px dashed #a78bfa;border-radius:0.5rem;color:#7c3aed;font-size:0.85rem;transition:all 0.15s" onmouseover="this.style.background='#f5f3ff'" onmouseout="this.style.background='transparent'">
-                            &#x1F4C1; 瀵煎叆鏂囦欢
+                            &#x1F4C1; 导入文件
                             <input type="file" accept=".src,.c,.txt,.cpp,.h" style="display:none" onchange="loadScannerFile(event)">
                         </label>
-                        <span id="scan-file-name" style="flex:1;display:flex;align-items:center;font-size:0.75rem;color:#9ca3af;padding-left:0.5rem">鏈€夋嫨鏂囦欢</span>
+                        <span id="scan-file-name" style="flex:1;display:flex;align-items:center;font-size:0.75rem;color:#9ca3af;padding-left:0.5rem">未选择文件</span>
                     </div>
-                    <button onclick="runScanner()" class="btn-primary w-full">璇嶆硶鍒嗘瀽</button>
+                    <button onclick="runScanner()" class="btn-primary w-full">词法分析</button>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">&#x1F4CB; Token 娴?/div>
+                    <div class="panel-header">&#x1F4CB; Token 流</div>
                     <div id="scan-output" class="result-box" style="max-height:400px;overflow:auto">
-                        <p class="text-gray-400 text-sm">鍒嗘瀽鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
                 </div>
             </div>
             <div class="content-grid mt-4">
                 <div class="panel" style="grid-column:1/-1">
-                    <div class="panel-header">&#x1F4CA; 缁熻淇℃伅</div>
+                    <div class="panel-header">&#x1F4CA; 统计信息</div>
                     <div id="scan-stats" class="result-box">
-                        <p class="text-gray-400 text-sm">鍒嗘瀽鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
                 </div>
             </div>
@@ -197,38 +197,38 @@ q3 1 q1</textarea>
         <!-- ========== LR(0) PAGE ========== -->
         <div id="page-lr0" class="page">
             <div class="page-header">
-                <h1 class="page-title">瀹為獙涓? LR(0) 瑙勮寖鏃忕敓鎴?/h1>
-                <p class="page-desc">杈撳叆鏂囨硶锛屾瀯寤篖R(0)椤圭洰闆嗚鑼冩棌锛岀敓鎴怗OTO鐘舵€佽浆绉诲浘锛屾娴嬬Щ杩?褰掔害鍐茬獊銆?/p>
+                <h1 class="page-title">实验三: LR(0) 规范族生成</h1>
+                <p class="page-desc">输入文法，构建LR(0)项目集规范族，生成GOTO状态转移图，检测移进-归约冲突。</p>
             </div>
             <div class="content-grid">
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; 鏂囨硶瀹氫箟</span>
+                        <span>&#x2705; 文法定义</span>
                         <label class="upload-link">
-                            &#x1F4C1; 涓婁紶鏂囦欢
+                            &#x1F4C1; 上传文件
                             <input type="file" accept=".txt" class="hidden" onchange="loadLR0File(event)">
                         </label>
                     </div>
                     <div class="form-group">
-                        <label>浜х敓寮?<span class="text-gray-400 text-xs">(鐢?-> 鎺ㄥ锛寍 鍒嗛殧)</span></label>
+                        <label>产生式 <span class="text-gray-400 text-xs">(用 -> 推导，| 分隔)</span></label>
                         <textarea id="lr0-input" rows="6" placeholder="E -> E + T | T&#10;T -> T * F | F&#10;F -> ( E ) | id">E -> E + T | T
 T -> T * F | F
 F -> ( E ) | id</textarea>
                     </div>
-                    <button onclick="runLR0()" class="btn-primary w-full">鏋勫缓瑙勮寖鏃?/button>
+                    <button onclick="runLR0()" class="btn-primary w-full">构建规范族</button>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">鐘舵€佽浆绉诲浘 <span class="text-gray-400 text-xs">(鍙嫋鎷?</span></div>
+                    <div class="panel-header">状态转移图 <span class="text-gray-400 text-xs">(可拖拽)</span></div>
                     <div id="lr0-graph" class="graph-container">
-                        <div class="graph-placeholder"><p>鏋勫缓瑙勮寖鏃忓悗鏄剧ず鍥惧舰</p></div>
+                        <div class="graph-placeholder"><p>构建规范族后显示图形</p></div>
                     </div>
                 </div>
             </div>
             <div class="content-grid mt-4">
                 <div class="panel">
-                    <div class="panel-header">&#x1F4CB; 椤圭洰闆嗚鎯?/div>
+                    <div class="panel-header">&#x1F4CB; 项目集详情</div>
                     <div id="lr0-items" class="result-box" style="max-height:300px;overflow:auto">
-                        <p class="text-gray-400 text-sm">鏋勫缓瑙勮寖鏃忓悗鏄剧ず</p>
+                        <p class="text-gray-400 text-sm">构建规范族后显示</p>
                     </div>
                 </div>
             </div>
@@ -237,38 +237,38 @@ F -> ( E ) | id</textarea>
         <!-- ========== SLR(1) PAGE ========== -->
         <div id="page-slr1" class="page">
             <div class="page-header">
-                <h1 class="page-title">瀹為獙鍥? SLR(1) 鍒嗘瀽琛ㄧ敓鎴?/h1>
-                <p class="page-desc">杈撳叆鏂囨硶锛岃嚜鍔ㄥ骞匡紝璁＄畻FIRST/FOLLOW闆嗭紝鏋勫缓LR(0)椤圭洰闆嗚鑼冩棌锛岀敓鎴怱LR(1)鍒嗘瀽琛紙ACTION+GOTO锛夛紝鍒╃敤FOLLOW闆嗚В鍐崇Щ杩?褰掔害鍐茬獊銆?/p>
+                <h1 class="page-title">实验四: SLR(1) 分析表生成</h1>
+                <p class="page-desc">输入文法，自动增广，计算FIRST/FOLLOW集，构建LR(0)项目集规范族，生成SLR(1)分析表（ACTION+GOTO），利用FOLLOW集解决移进-归约冲突。</p>
             </div>
             <div class="content-grid">
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; 鏂囨硶瀹氫箟</span>
+                        <span>&#x2705; 文法定义</span>
                         <label class="upload-link">
-                            &#x1F4C1; 涓婁紶鏂囦欢
+                            &#x1F4C1; 上传文件
                             <input type="file" accept=".txt" class="hidden" onchange="loadSLR1File(event)">
                         </label>
                     </div>
                     <div class="form-group">
-                        <label>浜х敓寮?<span class="text-gray-400 text-xs">(鐢?-> 鎺ㄥ锛寍 鍒嗛殧锛屾瘡琛屼竴鏉¤鍒?</span></label>
+                        <label>产生式 <span class="text-gray-400 text-xs">(用 -> 推导，| 分隔，每行一条规则)</span></label>
                         <textarea id="slr1-input" rows="6" placeholder="E -> E + T | T&#10;T -> T * F | F&#10;F -> ( E ) | id">E -> E + T | T
 T -> T * F | F
 F -> ( E ) | id</textarea>
                     </div>
-                    <button onclick="runSLR1()" class="btn-primary w-full">鏋勫缓SLR(1)鍒嗘瀽琛?/button>
+                    <button onclick="runSLR1()" class="btn-primary w-full">构建SLR(1)分析表</button>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">&#x1F4CA; FIRST / FOLLOW 闆?/div>
+                    <div class="panel-header">&#x1F4CA; FIRST / FOLLOW 集</div>
                     <div id="slr1-firstfollow" class="result-box" style="max-height:350px;overflow:auto">
-                        <p class="text-gray-400 text-sm">鏋勫缓鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">构建后显示</p>
                     </div>
                 </div>
             </div>
             <div class="content-grid mt-4">
                 <div class="panel" style="grid-column:1/-1">
-                    <div class="panel-header">&#x1F4CB; SLR(1) 鍒嗘瀽琛?/div>
+                    <div class="panel-header">&#x1F4CB; SLR(1) 分析表</div>
                     <div id="slr1-table" class="overflow-auto" style="max-height:500px">
-                        <div class="graph-placeholder"><p>鏋勫缓鍒嗘瀽琛ㄥ悗鏄剧ず</p></div>
+                        <div class="graph-placeholder"><p>构建分析表后显示</p></div>
                     </div>
                 </div>
             </div>
@@ -277,16 +277,16 @@ F -> ( E ) | id</textarea>
         <!-- ========== SEMANTIC PAGE ========== -->
         <div id="page-semantic" class="page">
             <div class="page-header">
-                <h1 class="page-title">瀹為獙浜? 璇箟鍒嗘瀽涓庣鍙疯〃绠＄悊</h1>
-                <p class="page-desc">杈撳叆婧愪唬鐮侊紝杩涜璇嶆硶鍒嗘瀽銆侀€掑綊涓嬮檷璇硶鍒嗘瀽锛屾瀯寤烘娊璞¤娉曟爲(AST)鍜屼綔鐢ㄥ煙绗﹀彿琛紝鎵ц璇箟妫€鏌ワ紙閲嶅澹版槑銆佹湭澹版槑鍙橀噺銆佺被鍨嬪尮閰嶏級銆?/p>
+                <h1 class="page-title">实验五: 语义分析与符号表管理</h1>
+                <p class="page-desc">输入源代码，进行词法分析、递归下降语法分析，构建抽象语法树(AST)和作用域符号表，执行语义检查（重复声明、未声明变量、类型匹配）。</p>
             </div>
             <div class="content-grid">
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; 婧愪唬鐮佽緭鍏?/span>
+                        <span>&#x2705; 源代码输入</span>
                     </div>
                     <div class="form-group">
-                        <label>婧愪唬鐮?<span class="text-gray-400 text-xs">(鏀寔 int/float/if/while/return)</span></label>
+                        <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while/return)</span></label>
                         <textarea id="sem-input" rows="12" placeholder="int main() {&#10;  int a;&#10;  a = 3 + 5;&#10;  return a;&#10;}">int main() {
     int a;
     int b;
@@ -310,26 +310,26 @@ F -> ( E ) | id</textarea>
     return c;
 }</textarea>
                     </div>
-                    <button onclick="runSemantic()" class="btn-primary w-full">璇箟鍒嗘瀽</button>
+                    <button onclick="runSemantic()" class="btn-primary w-full">语义分析</button>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">&#x1F333; 鎶借薄璇硶鏍?(AST)</div>
+                    <div class="panel-header">&#x1F333; 抽象语法树 (AST)</div>
                     <div id="sem-ast" class="result-box" style="max-height:400px;overflow:auto">
-                        <p class="text-gray-400 text-sm">鍒嗘瀽鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
                 </div>
             </div>
             <div class="content-grid mt-4">
                 <div class="panel">
-                    <div class="panel-header">&#x1F4DA; 绗﹀彿琛?/div>
+                    <div class="panel-header">&#x1F4DA; 符号表</div>
                     <div id="sem-symtable" class="result-box">
-                        <p class="text-gray-400 text-sm">鍒嗘瀽鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">&#x2753; 璇箟妫€鏌ョ粨鏋?/div>
+                    <div class="panel-header">&#x2753; 语义检查结果</div>
                     <div id="sem-errors" class="result-box">
-                        <p class="text-gray-400 text-sm">鍒嗘瀽鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">分析后显示</p>
                     </div>
                 </div>
             </div>
@@ -338,16 +338,16 @@ F -> ( E ) | id</textarea>
         <!-- ========== IRGEN PAGE ========== -->
         <div id="page-irgen" class="page">
             <div class="page-header">
-                <h1 class="page-title">瀹為獙鍏? 涓棿浠ｇ爜鐢熸垚</h1>
-                <p class="page-desc">杈撳叆婧愪唬鐮侊紝鐢熸垚鍥涘厓寮忎腑闂翠唬鐮?(op, arg1, arg2, result)锛屾敮鎸佽〃杈惧紡缈昏瘧锛堣繍绠楃浼樺厛绾э級銆佹帶鍒舵祦璺宠浆锛坕f/while鐨凩ABEL/JZ/JMP锛夈€?/p>
+                <h1 class="page-title">实验六: 中间代码生成</h1>
+                <p class="page-desc">输入源代码，生成四元式中间代码 (op, arg1, arg2, result)，支持表达式翻译（运算符优先级）、控制流跳转（if/while的LABEL/JZ/JMP）。</p>
             </div>
             <div class="content-grid">
                 <div class="panel">
                     <div class="panel-header">
-                        <span>&#x2705; 婧愪唬鐮佽緭鍏?/span>
+                        <span>&#x2705; 源代码输入</span>
                     </div>
                     <div class="form-group">
-                        <label>婧愪唬鐮?<span class="text-gray-400 text-xs">(鏀寔 int/float/if/while/return/print/input)</span></label>
+                        <label>源代码 <span class="text-gray-400 text-xs">(支持 int/float/if/while/return/print/input)</span></label>
                         <textarea id="irgen-input" rows="12" placeholder="int main() {&#10;  int x;&#10;  x = 3 + 5 * 2;&#10;  return x;&#10;}">int main() {
     int a;
     int b;
@@ -367,26 +367,26 @@ F -> ( E ) | id</textarea>
     return c;
 }</textarea>
                     </div>
-                    <button onclick="runIRGen()" class="btn-primary w-full">鐢熸垚鍥涘厓寮?/button>
+                    <button onclick="runIRGen()" class="btn-primary w-full">生成四元式</button>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">&#x1F4CB; 鍥涘厓寮忎腑闂翠唬鐮?/div>
+                    <div class="panel-header">&#x1F4CB; 四元式中间代码</div>
                     <div id="irgen-quads" class="result-box" style="max-height:400px;overflow:auto">
-                        <p class="text-gray-400 text-sm">鐢熸垚鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">生成后显示</p>
                     </div>
                 </div>
             </div>
             <div class="content-grid mt-4">
                 <div class="panel">
-                    <div class="panel-header">&#x1F4DA; 绗﹀彿琛?/div>
+                    <div class="panel-header">&#x1F4DA; 符号表</div>
                     <div id="irgen-symtable" class="result-box">
-                        <p class="text-gray-400 text-sm">鐢熸垚鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">生成后显示</p>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="panel-header">&#x1F4F7; Token 娴?/div>
+                    <div class="panel-header">&#x1F4F7; Token 流</div>
                     <div id="irgen-tokens" class="result-box" style="max-height:200px;overflow:auto">
-                        <p class="text-gray-400 text-sm">鐢熸垚鍚庢樉绀?/p>
+                        <p class="text-gray-400 text-sm">生成后显示</p>
                     </div>
                 </div>
             </div>
