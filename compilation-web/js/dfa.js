@@ -99,22 +99,30 @@ function runDfa() {
 }
 
 function testDfaString() {
-    if (!currentDfa) { alert('请先解析DFA'); return; }
+    if (!currentDfa) { alert('请先点击"解析并生成图"按钮'); return; }
     const inputStr = document.getElementById('dfa-string').value;
 
     const dfa = currentDfa;
+    console.log('=== DFA Test ===');
+    console.log('Input:', JSON.stringify(inputStr));
+    console.log('Start:', dfa.startState);
+    console.log('Accept states:', [...dfa.acceptStates]);
+    console.log('Transitions:', JSON.stringify(dfa.transitions));
+
     let cur = dfa.startState;
     let path = [cur];
     let ok = true;
 
     for (const ch of inputStr) {
         const key = cur + ',' + ch;
-        if (dfa.transitions[key] === undefined) { ok = false; break; }
+        console.log('  char:', JSON.stringify(ch), 'key:', key, '->', dfa.transitions[key]);
+        if (dfa.transitions[key] === undefined) { ok = false; console.log('  BREAK: no transition for', key); break; }
         cur = dfa.transitions[key];
         path.push(cur);
     }
 
     const accepted = ok && dfa.acceptStates.has(cur);
+    console.log('Final state:', cur, 'Accepted:', accepted);
     const div = document.getElementById('dfa-result');
     div.classList.remove('hidden');
     div.innerHTML = `
