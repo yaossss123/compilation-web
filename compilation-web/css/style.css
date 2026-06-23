@@ -319,17 +319,55 @@ body {
 .slr-table td.cell-acc { background: #f0fdf4; color: #16a34a; font-weight: 700; }
 .slr-table td.cell-goto { background: #faf5ff; color: #7c3aed; font-weight: 600; }
 
-/* === AST Styles === */
-.ast-tree {
-    font-family: 'Consolas', monospace;
-    font-size: 0.78rem;
-    line-height: 1.6;
+/* === AST Tree Styles === */
+.ast-tree { margin: 0; padding: 0; }
+.ast-tree ul {
+    list-style: none;
+    padding-left: 1.2em;
     margin: 0;
-    white-space: pre;
 }
-.ast-node { display: block; }
-.ast-val { color: #2563eb; }
-.ast-type { color: #059669; font-size: 0.7rem; }
+.ast-tree > ul { padding-left: 0; }
+.ast-tree li {
+    position: relative;
+    padding-left: 0.6em;
+    line-height: 1.7;
+}
+.ast-tree li::before {
+    content: '';
+    position: absolute;
+    left: -0.1em;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #cbd5e1;
+}
+.ast-tree li::after {
+    content: '';
+    position: absolute;
+    left: -0.1em;
+    top: 0.85em;
+    width: 0.7em;
+    height: 1px;
+    background: #cbd5e1;
+}
+.ast-tree li:last-child::before { height: 0.85em; }
+.ast-tree .tree-root { font-weight: 700; color: #1e40af; font-size: 0.9rem; }
+.ast-tree .ast-node {
+    font-family: 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: #334155;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #f1f5f9;
+    display: inline;
+}
+.ast-tree .ast-func { background: #ede9fe; color: #6d28d9; }
+.ast-tree .ast-decl { background: #dbeafe; color: #1d4ed8; }
+.ast-tree .ast-ctrl { background: #fef3c7; color: #92400e; }
+.ast-tree .ast-expr { background: #f0fdf4; color: #166534; }
+.ast-tree .ast-val { color: #2563eb; font-weight: 400; }
+.ast-tree .ast-type { color: #059669; font-size: 0.72rem; font-weight: 400; }
 
 /* === Symbol Table === */
 .scope-group { margin-bottom: 0.75rem; }

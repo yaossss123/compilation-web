@@ -362,14 +362,38 @@ function SemParser(tokens, symTable, errors) {
 // ===== Render AST =====
 function renderAST(node, depth) {
     if (!node) return '';
-    let html = '';
-    for (let i = 0; i < depth; i++) html += '&nbsp;&nbsp;';
-    html += '<span class="ast-node">' + node.kind;
-    if (node.value) html += '<span class="ast-val">(' + node.value + ')</span>';
-    if (node.dataType) html += '<span class="ast-type">:' + node.dataType + '</span>';
-    html += '</span>\n';
-    node.children.forEach(c => { html += renderAST(c, depth + 1); });
-    return html;
+    var kind = node.kind;
+    var cls = 'ast-node';
+    if (kind === 'Program') cls = 'tree-root';
+    else if (kind === 'FuncDecl') cls = 'ast-node ast-func';
+    else if (kind === 'VarDecl' || kind === 'Param') cls = 'ast-node ast-decl';
+    else if (kind === 'If' || kind === 'While' || kind === 'Return' || kind === 'Print' || kind === 'Input') cls = 'ast-node ast-ctrl';
+    else if (kind === 'BinOp' || kind === 'Assign' || kind === 'IntConst' || kind === 'FloatConst' || kind === 'ID') cls = 'ast-node ast-expr';
+
+    var label = '<span class="' + cls + '">' + escAst(kind);
+    if (node.value) label += '<span class="ast-val">(' + escAst(node.value) + ')</span>';
+    if (node.dataType) label += '<span class="ast-type">:' + node.dataType + '</span>';
+    label += '</span>';
+
+    if (node.children && node.children.length > 0) {
+        var html = '';
+        if (depth === 0) {
+            html += '<div class="ast-tree"><ul><li>' + label + '<ul>';
+            for (var i = 0; i < node.children.length; i++) html += renderAST(node.children[i], depth + 1);
+            html += '</ul></li></ul></div>';
+        } else {
+            html += '<li>' + label + '<ul>';
+            for (var j = 0; j < node.children.length; j++) html += renderAST(node.children[j], depth + 1);
+            html += '</ul></li>';
+        }
+        return html;
+    }
+    if (depth === 0) return '<div class="ast-tree"><ul><li>' + label + '</li></ul></div>';
+    return '<li>' + label + '</li>';
+}
+
+function escAst(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 // ===== Main Entry =====
@@ -382,7 +406,7 @@ function runSemantic() {
     const ast = parser.parseProgram();
 
     // AST
-    document.getElementById('sem-ast').innerHTML = '<pre class="ast-tree">' + renderAST(ast, 0) + '</pre>';
+        document.getElementById('sem-ast').innerHTML = renderAST(ast, 0);
 
     // Symbol table
     const scopes = symTable.getScopes();
