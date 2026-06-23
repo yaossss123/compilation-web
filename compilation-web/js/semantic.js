@@ -265,6 +265,19 @@ function SemParser(tokens, symTable, errors) {
     }
 
     function parseBoolExpr() {
+        let node = parseRelExpr();
+        while (peek().type===SEM_TK.AND||peek().type===SEM_TK.OR) {
+            const op = peek().value; advance();
+            const right = parseRelExpr();
+            const binop = SemNode('BinOp', op);
+            binop.children.push(node);
+            binop.children.push(right);
+            node = binop;
+        }
+        return node;
+    }
+
+    function parseRelExpr() {
         let left = parseExpr();
         const op = peek().type;
         if (op===SEM_TK.LT||op===SEM_TK.GT||op===SEM_TK.LE||op===SEM_TK.GE||op===SEM_TK.EQ||op===SEM_TK.NE) {

@@ -271,6 +271,18 @@ function IRGenerator(tokens) {
     }
 
     function parseCond() {
+        let node = parseRelCond();
+        while (peek().type===IR_TK.AND||peek().type===IR_TK.OR) {
+            const op = peek().val; advance();
+            const right = parseRelCond();
+            const tmp = newTmp();
+            emit(op, node, right, tmp);
+            node = tmp;
+        }
+        return node;
+    }
+
+    function parseRelCond() {
         const left = parseExpr();
         const t = peek().type;
         if (t===IR_TK.LT||t===IR_TK.GT||t===IR_TK.LE||t===IR_TK.GE||t===IR_TK.EQ||t===IR_TK.NE) {
