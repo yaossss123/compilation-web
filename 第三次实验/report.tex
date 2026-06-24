@@ -94,9 +94,7 @@ $I_2$: $E' \to E\cdot$, $E \to E\cdot +T$ \\
 $I_2$里$E' \to E\cdot$是归约，$E \to E\cdot+T$是移进，存在移进-归约冲突。$I_4$和$I_{10}$也有类似问题。所以\textbf{这个文法不是LR(0)的}。
 
 \begin{center}
-\includegraphics[width=0.9\textwidth]{image/1.1.png}
-\vspace{0.5em}
-\includegraphics[width=0.9\textwidth]{image/1.2.png}
+\includegraphics[width=0.9\textwidth,height=6cm,keepaspectratio]{image/1.1.png}
 \end{center}
 
 \subsection{简单文法}
@@ -105,7 +103,7 @@ $S \to aB$, $B \to bB | c$
 生成6个状态、7个转移，没有冲突，\textbf{是LR(0)文法}。
 
 \begin{center}
-\includegraphics[width=0.9\textwidth]{image/2.1.png}
+\includegraphics[width=0.9\textwidth,height=5cm,keepaspectratio]{image/2.1.png}
 \end{center}
 
 \section{问答题：DFA词法规则与报错分析}
@@ -126,7 +124,7 @@ $S \to aB$, $B \to bB | c$
 \textbf{主要功能：}文法输入（支持多右部产生式）、LR(0)项目集规范族表格展示、GOTO状态转移图可视化（vis.js）、移进-归约冲突和归约-归约冲突自动检测。
 
 \begin{center}
-\fbox{\parbox{0.95\textwidth}{\vspace{3cm}\centerline{\textcolor{gray}{（Web前端展示截图）}}\vspace{3cm}}}
+\includegraphics[width=0.95\textwidth,height=10cm,keepaspectratio]{image/web.png}
 \end{center}
 
 前端自动添加增广产生式$S' \to S$，以不同颜色标注各状态中的移进项目、归约项目和冲突项目。
